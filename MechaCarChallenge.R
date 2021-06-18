@@ -37,10 +37,33 @@ total_summary
 lot_summary_df
 
 ################# Generate Plot ##################
-plt<- ggplot(coils_df, aes(x=PSI, color=Manufacturing_Lot))
+plt <- ggplot(coils_df, aes(x=PSI, color=Manufacturing_Lot))
 plt + geom_density() + labs(title = 'Density Distribution by Manufacturing Lot', y='Density', color='Manufacturing Lot') + theme(legend.position = c(0.1,0.7), legend.background = element_rect(fill='white', size=0.5, linetype='solid', color='black'))
 
 ############# Deliverable 3 ###########################
 ## T-test on Suspension Coils
 
+all_lots <- t.test(x=coils_df$PSI, mu=1500)
 
+## helper function returns p.value of t.test for Manufacturing_Lot==lot
+lot_Pval = function(lot){
+  return (t.test(PSI~1, data= coils_df, subset=(Manufacturing_Lot == lot), mu=1500)$p.value)
+}
+
+## generate a t.test for each existing Manufacturing_Lot
+lots <- unique(coils_df$Manufacturing_Lot)
+lots_pvalues <- vector()
+for (lot in lots){
+  lots_pvalues <- c(lots_pvalues,lot_Pval(lot))
+}
+## set names
+names(lots_pvalues) <- lots
+
+################# Output to console###############
+
+all_lots
+###  p-value all lots as compared to mean of 1500psi.
+all_lots$p.value
+
+### p.values for One Sample t-test for each lot
+lots_pvalues
