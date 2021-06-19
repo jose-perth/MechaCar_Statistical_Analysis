@@ -15,7 +15,6 @@ The following files are part of the challenge.
 [MechaCarChallenge.R](MechaCarChallenge.R) - R Script with linear regression analysis.
 [/resources folder](/resources) - holds data available for analysis
 
-
 ### Deliverable 1. Linear Regression to Predict MPG
 
 Performed a linear regression using the `MechaCar_mpg.csv`. Details of the R script can be seen here: [MechaCarChallenge.R](MechaCarChallenge.R). The expression  used is:
@@ -99,25 +98,55 @@ names(lots_pvalues) <- lots
 
 I would proposed a study to determine whether the resale value of the MechaCar's is statistically higher than those of competitors in the same vehicle class.
 
+#### Metric to Test
+
 The variable of interest would be the drop on value of the vehicle (`delta_price`), this is the difference between the MSRP of the new vehicle minus the advertised resale price.
 
 Visiting car resale sites, we need to gather at least the following information to construct our sample:
 
-- vehicle model
-- vehicle year
-- vehicle class
+- vehicle_model
+- vehicle_year
+- vehicle_class
 - MSRP (original price)
-- resale price
+- resale_price
 - mileage
 
-We can calculate `delta_price = MSRP - resale_price` and bucket the mileage
+We then need to calculate our focus (dependent):
 
+ `delta_price = MSRP - resale_price`.
 
-Hypotheses:  if the MechaCar has a better resale value than its competitors, then advertised used MechaCars will have a lower `delta_price` than competitors in the same category and with similar mileage.
+There is a relevant independent variable that from experience is relevant to resale price and represents a proxy for vehicle condition. This variable is the mileage per year of the vehicle. The variable can be estimated by the expression:
 
-ANOVA test independent variable categorical (vehicle_class), dependent variable (drop on value at resale).
+`miles_per_year = mileage / max(1,(current_year - vehicle_year))`
 
+This variable should be bucketed into 3 groups so as maintain the variable as a categorical variable, let call it `mileage_group`. 
 
+The boundaries of these groups (bins) could follow the general practice of low: 0-10,000 miles/year, medium: 10,000-20,000 miles/year and high: >20,000 miles/year.
 
+#### Hypotheses
 
+If the MechaCar has a better resale value than its competitors, then advertised used MechaCars will have a lower `delta_price` than competitors in the same vehicle class and within mileage group.
 
+#### Null Hypotheses 
+
+If the MechaCar doesn't have a better resale than its competitors, then the `delta_price` would not be lower with statistical significance for MechaCars when compared with competitors within the same vehicle class and mileage group.
+
+#### Alternate Hypotheses 
+
+If the MechaCar has a better resale value than its competitors, then the `delta_price` will be lower with statistical significant for MechaCars when compared with competitors within the same vehicle class and mileage group.
+
+#### Statistical Test
+
+I would use an ANOVA test. The ANOVA test allows us to have independent categorical variables (`vehicle_model`) and a continuous dependent variable `delta_price`.
+
+The data should be filtered by `vehicle_class` and `mileage_group` to ensure we are only comparing vehicles in the same class and similar conditions.
+
+In R, the script would have the form:
+
+```R
+aov_result <- summary(aov(delta_price ~ vehicle_model, data = input_data))
+```
+
+The significance level (alpha) recommended is 0.05.
+
+The result from the ANOVA test would indicate whether the p-value is less than 0.05 so we can reject the null hypotheses.
