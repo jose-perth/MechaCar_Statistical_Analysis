@@ -6,14 +6,14 @@ This project is the weekly challenge for week 15th of the Data Science Bootcamp.
 
 ### Purpose
 
-Module 15.
+Use R and statistical analysis to review the production data and provide insights for the manufacturing team at AutoRUs.
 
 ## Results
 
 The following files are part of the challenge.
 
-[MechaCarChallenge.R](MechaCarChallenge.R) - R Script with linear regression analysis.
-[/resources folder](/resources) - holds data available for analysis
+- [MechaCarChallenge.R](MechaCarChallenge.R) - R Script with linear regression analysis.
+- [/resources folder](/resources) - holds data available for analysis
 
 ### Deliverable 1. Linear Regression to Predict MPG
 
@@ -23,13 +23,14 @@ Performed a linear regression using the `MechaCar_mpg.csv`. Details of the R scr
 lm( mpg ~ vehicle_length + vehicle_weight + spoiler_angle + ground_clearance + AWD, mechacar_df)
 ```
 
-The summary of the model results can be seen here:
+The summary of the model results can be seen in the snapshot below.
+
 ![Deliverable 1 Snapshot](resources/deliverable1-snapshot1.png
 )
 
 #### Significant Variables
 
-Using a significance level (alpha) of 0.05. We can see the following variables have a significant impact on the dependent variable `mpg`.  That is, their p-value indicate they provide a non-random amount of variance to the `mpg` values.
+Using a significance level (alpha) of 0.05, we can see the following variables have a significant impact on the dependent variable `mpg`.  That is, their p-value indicate they provide a non-random amount of variance to the `mpg` values.
 
 |Variable | p-value|
 |:---|:---:|
@@ -149,4 +150,6 @@ aov_result <- summary(aov(delta_price ~ vehicle_model, data = input_data))
 
 The significance level (alpha) recommended is 0.05.
 
-The result from the ANOVA test would indicate whether the p-value is less than 0.05 so we can reject the null hypotheses.
+The result from the ANOVA test would indicate whether the p-value is less than 0.05. If this is the case we can reject the null hypotheses and continue to assume our initial hypotheses.
+
+A different type of statistical analysis would be needed in the case that the p-value is higher than alpha (0.05).
